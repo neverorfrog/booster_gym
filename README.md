@@ -2,7 +2,7 @@
 
 Booster Gym is a reinforcement learning (RL) framework designed for humanoid robot locomotion developed by [Booster Robotics](https://boosterobotics.com/).
 
-[![real_T1_deploy](https://obs-cdn.boosterobotics.com/rl_deploy_demo_video.gif)](https://obs-cdn.boosterobotics.com/rl_deploy_demo_video.mp4)
+[![real_T1_deploy](https://obs-cdn.boosterobotics.com/rl_deploy_demo_video_v3.gif)](https://obs-cdn.boosterobotics.com/rl_deploy_demo_video.mp4)
 
 ## Features
 
