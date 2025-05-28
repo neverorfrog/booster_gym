@@ -6,7 +6,7 @@ class Policy:
     def __init__(self, cfg):
         try:
             self.cfg = cfg
-            self.policy = torch.jit.load(self.cfg["policy"]["policy_path"])
+            self.policy = torch.jit.load(self.cfg["policy"]["policy_path"], map_location="cpu")
             self.policy.eval()
         except Exception as e:
             print(f"Failed to load policy: {e}")
