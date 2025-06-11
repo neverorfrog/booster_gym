@@ -9,6 +9,7 @@ import torch
 import mujoco, mujoco.viewer
 from utils.model import *
 
+from fast_td3 import load_policy
 
 def quat_rotate_inverse(q, v):
     q_w = q[-1]
@@ -30,12 +31,8 @@ if __name__ == "__main__":
     if args.checkpoint is not None:
         cfg["basic"]["checkpoint"] = args.checkpoint
 
-    model = ActorCritic(cfg["env"]["num_actions"], cfg["env"]["num_observations"], cfg["env"]["num_privileged_obs"])
-    if not cfg["basic"]["checkpoint"] or (cfg["basic"]["checkpoint"] == "-1") or (cfg["basic"]["checkpoint"] == -1):
-        cfg["basic"]["checkpoint"] = sorted(glob.glob(os.path.join("logs", "**/*.pth"), recursive=True), key=os.path.getmtime)[-1]
-    print("Loading model from {}".format(cfg["basic"]["checkpoint"]))
-    model_dict = torch.load(cfg["basic"]["checkpoint"], map_location="cpu", weights_only=True)
-    model.load_state_dict(model_dict["model"])
+    policy = load_policy(cfg["basic"]["checkpoint"])
+    policy = torch.compile(policy)
 
     mj_model = mujoco.MjModel.from_xml_path(cfg["asset"]["mujoco_file"])
     mj_model.opt.timestep = cfg["sim"]["dt"]
@@ -114,7 +111,7 @@ if __name__ == "__main__":
                 obs[11:23] = (dof_pos - default_dof_pos) * cfg["normalization"]["dof_pos"]
                 obs[23:35] = dof_vel * cfg["normalization"]["dof_vel"]
                 obs[35:47] = actions
-                dist = model.act(torch.tensor(obs).unsqueeze(0))
+                dist = policy.act(torch.tensor(obs).unsqueeze(0))
                 actions[:] = dist.loc.detach().numpy()
                 actions[:] = np.clip(actions, -cfg["normalization"]["clip_actions"], cfg["normalization"]["clip_actions"])
                 dof_targets[:] = default_dof_pos + cfg["control"]["action_scale"] * actions
