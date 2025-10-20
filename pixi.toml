@@ -1,0 +1,40 @@
+[package]
+name = "booster_gym"
+version = "0.1.0"
+[package.build]
+backend = { name = "pixi-build-python", version = "0.1.*" }
+[package.host-dependencies]
+hatchling = "*"
+python = "==3.8"
+
+[workspace]
+channels = [
+  "https://prefix.dev/pixi-build-backends",
+  "https://prefix.dev/conda-forge",
+  "pytorch"
+]
+platforms = ["linux-64"]
+preview = ["pixi-build"]
+
+[system-requirements]
+cuda = "12"
+
+[dependencies]
+booster_gym = { path = "." }
+python = "==3.8"
+
+[activation.env]
+LD_LIBRARY_PATH = "$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
+
+[pypi-dependencies]
+isaacgym = {path = "./isaacgym/python", editable=true}  
+fast_td3 = {git = "https://github.com/younggyoseo/FastTD3.git", branch = "main"}
+numpy = "==1.21.6"
+setuptools = ">=59.0.0"
+tensorboard = ">=2.10.0"
+torch = ">=1.10.0"
+pyyaml = ">=5.3.1"
+imageio = ">=2.9.0"
+wandb = ">=0.22.2, <0.23"
+mujoco = ">=3.2.3, <4"
+tensordict = ">=0.5.0, <0.6"
