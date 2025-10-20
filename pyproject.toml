@@ -10,6 +10,7 @@ readme = "README.md"
 [project.scripts]
 play = "booster_gym.play:main"
 play_mujoco = "booster_gym.play_mujoco:main"
+deploy = "booster_gym.deploy.deploy:main"
 
 [tool.pixi.project]
 channels = ["conda-forge"]

@@ -69,7 +69,8 @@ def main():
 
     actions = np.zeros((cfg["env"]["num_actions"]), dtype=np.float32)
     dof_targets = np.zeros(default_dof_pos.shape, dtype=np.float32)
-    gait_frequency = gait_process = 0.0
+    gait_frequency = gait_process_left = 0.0
+    gait_process_right = np.pi
     lin_vel_x = lin_vel_y = ang_vel_yaw = 0.0
     it = 0
 
@@ -101,7 +102,7 @@ def main():
             base_lin_vel = mj_data.sensor("local_linvel").data.astype(np.float32)
             projected_gravity = quat_rotate_inverse(quat, np.array([0.0, 0.0, -1.0]))
             if it % cfg["control"]["decimation"] == 0:
-                obs = np.zeros(cfg["env"]["num_observations"], dtype=np.float32)
+                obs = np.zeros(52, dtype=np.float32)
                 obs[0:3] = base_lin_vel * cfg["normalization"]["lin_vel"]
                 obs[3:6] = base_ang_vel * cfg["normalization"]["ang_vel"]
                 obs[6:9] = projected_gravity * cfg["normalization"]["gravity"]
@@ -111,8 +112,11 @@ def main():
                 obs[12:24] = (dof_pos - default_dof_pos) * cfg["normalization"]["dof_pos"]
                 obs[24:36] = dof_vel * cfg["normalization"]["dof_vel"]
                 obs[36:48] = actions
-                obs[48] = np.cos(2 * np.pi * gait_process) * (gait_frequency > 1.0e-8)
-                obs[49] = np.sin(2 * np.pi * gait_process) * (gait_frequency > 1.0e-8)
+                obs[48] = np.cos(2 * np.pi * gait_process_left) * (gait_frequency > 1.0e-8)
+                obs[49] = np.sin(2 * np.pi * gait_process_left) * (gait_frequency > 1.0e-8)
+                obs[50] = np.cos(2 * np.pi * gait_process_right) * (gait_frequency > 1.0e-8)
+                obs[51] = np.sin(2 * np.pi * gait_process_right) * (gait_frequency > 1.0e-8)
+                
                 dist = policy.act(torch.tensor(obs).unsqueeze(0))
                 actions[:] = dist.loc.detach().numpy()
                 actions[:] = np.clip(actions, -cfg["normalization"]["clip_actions"], cfg["normalization"]["clip_actions"])
@@ -126,4 +130,5 @@ def main():
             viewer.cam.lookat[:] = mj_data.qpos.astype(np.float32)[0:3]
             viewer.sync()
             it += 1
-            gait_process = np.fmod(gait_process + cfg["sim"]["dt"] * gait_frequency, 1.0)
+            gait_process_left = np.fmod(gait_process_left + cfg["sim"]["dt"] * gait_frequency, 1.0)
+            gait_process_right = np.fmod(gait_process_right + cfg["sim"]["dt"] * gait_frequency, 1.0)
