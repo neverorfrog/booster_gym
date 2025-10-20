@@ -201,7 +201,7 @@ class Controller:
         self.cleanup()
 
 
-if __name__ == "__main__":
+def main():
     import argparse
     import signal
     import sys

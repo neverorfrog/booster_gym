@@ -36,7 +36,7 @@ common:
 policy:
   policy_path: "./models/T1.pt"
   num_actions: 12
-  num_observations: 47
+  num_observations: 52
   gait_frequency: 1
 
   normalization:
