@@ -5,12 +5,12 @@ import argparse
 import torch
 from booster_gym.utils.model import *
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--task", required=True, type=str, help="Name of the task to run.")
     parser.add_argument("--checkpoint", type=str, help="Path of model checkpoint to load. Overrides config file if provided.")
     args = parser.parse_args()
-    cfg_file = os.path.join("envs", "{}.yaml".format(args.task))
+    cfg_file = os.path.join("booster_gym/envs", "{}.yaml".format(args.task))
     with open(cfg_file, "r", encoding="utf-8") as f:
         cfg = yaml.load(f.read(), Loader=yaml.FullLoader)
     if args.checkpoint is not None:
@@ -21,6 +21,9 @@ if __name__ == "__main__":
         cfg["basic"]["checkpoint"] = sorted(glob.glob(os.path.join("logs", "**/*.pth"), recursive=True), key=os.path.getmtime)[-1]
     print("Loading model from {}".format(cfg["basic"]["checkpoint"]))
     model_dict = torch.load(cfg["basic"]["checkpoint"], map_location="cpu", weights_only=True)
+    
+    print(model_dict)
+    
     model.load_state_dict(model_dict["model"])
 
     model.eval()
