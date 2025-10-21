@@ -217,7 +217,7 @@ def main():
     parser.add_argument("--config", required=True, type=str, help="Name of the configuration file.")
     parser.add_argument("--net", type=str, default="127.0.0.1", help="Network interface for SDK communication.")
     args = parser.parse_args()
-    cfg_file = os.path.join("configs", args.config)
+    cfg_file = os.path.join("booster_gym/deploy/configs", args.config)
     print(cfg_file)
 
     print(f"Starting custom controller, connecting to {args.net} ...")

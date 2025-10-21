@@ -3,7 +3,7 @@ name = "booster_gym"
 version = "0.1.0"
 description = "Locomotion using Reinforcement Learning and Model Predictive Control"
 authors = [{name = "neverorfrog", email = "97flavio.maiorana@gmail.com"}]
-requires-python = "==3.12"
+requires-python = "==3.11"
 license = {text = "Apache-2.0"}
 readme = "README.md"
 

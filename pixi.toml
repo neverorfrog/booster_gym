@@ -17,14 +17,10 @@ backend = { name = "pixi-build-python", version = "*" }
 
 [package.host-dependencies]
 hatchling = "*"
-python = "==3.12"
-
-[system-requirements]
-cuda = "12"
+python = "==3.11"
 
 [dependencies]
 booster_gym = { path = "." }
-booster_robotics_sdk = {git = "https://github.com/neverorfrog/booster_robotics_sdk.git", branch = "deploy"}
 pybind11 = ">=3.0.1,<4"
 pybind11-stubgen = ">=2.5.5,<3"
 ros-jazzy-fastrtps = ">=2.14.4,<3"
@@ -33,7 +29,7 @@ foonathan-memory = ">=0.7.3,<0.8"
 evdev = ">=1.9.2,<2"
 
 [activation]
-env = { PATH = "$CONDA_PREFIX/bin:$PATH", LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:$CONDA_PREFIX/lib" }
+env = { PATH = "$CONDA_PREFIX/bin:$PATH", LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:$CONDA_PREFIX/lib", PYTHONPATH = "/usr/local/lib/python3.11/dist-packages:$PYTHONPATH" }
 
 [pypi-dependencies]
 fast_td3 = {git = "https://github.com/younggyoseo/FastTD3.git", branch = "main"}
