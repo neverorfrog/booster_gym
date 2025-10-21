@@ -1,1 +1,4 @@
 isaacgym/
+
+*.pyc
+__pycache__/
